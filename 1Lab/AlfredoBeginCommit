@@ -8,13 +8,13 @@ inserted_item AS (
 inserted_pawn AS (
     INSERT INTO Pawn (pawn_client_id, pawn_item_id, pawn_sign_date, pawn_summ, pawn_comis, pawn_end_date, pawn_redemption_date)
     SELECT 
-        1,               -- ID клиента (client_id)
-        item_id,         -- Берем ID из предыдущего шага!
-        '2026-03-16',    -- Дата заключения
-        25000.00,        -- Сумма залога
-        10,              -- Комиссия %
-        '2026-04-16',    -- Дата окончания
-        NULL             -- Дата выкупа (пока NULL)
+        1,               
+        item_id,         
+        '2026-03-16',    
+        25000.00,        
+        10,             
+        '2026-04-16',    
+        NULL            
     FROM inserted_item
     RETURNING pawn_id, pawn_item_id 
 )
