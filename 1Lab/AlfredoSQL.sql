@@ -1,3 +1,10 @@
+CREATE TYPE item_status_type AS ENUM (
+    'принято', 
+    'на_продаже', 
+    'выкуплено', 
+    'продано_с_витрины'
+);
+
 Create Table Item_type (
 	item_type_id	SERIAL	PRIMARY KEY,
 	item_type_name	TEXT	NOT NULL
@@ -14,7 +21,7 @@ Create Table Item (
 	item_type_id		INT 			NOT NULL REFERENCES Item_type(item_type_id),
 	item_percent_wear	INT 			NOT NULL CHECK(item_percent_wear BETWEEN 0 AND 100),
 	item_summ			NUMERIC(12,2) 	NOT NULL CHECK(item_summ > 0),
-	item_status			TEXT 			NOT NULL CHECK(item_status IN('принято', 'на_продаже', 'выкуплено', 'продано_с_витрины')),
+	item_status			item_status_type NOT NULL ,
 	item_active_pawn_id INT            	UNIQUE,
 	item_sale_price     NUMERIC(12,2)   CHECK(item_sale_price >= 0), 
     item_sale_date      DATE
@@ -33,7 +40,7 @@ Create Table Client (
 	client_first_name		TEXT		NOT NULL,
 	client_middle_name		TEXT,
 	client_passport_seria	CHAR(4)		NOT NULL CHECK(client_passport_seria ~ '[0-9]{4}$'),
-	client_passport_number	CHAR(6)		NOT NULL CHECK(client_passport_number ~ '^[0-9]{6}$'),
+	client_passport_number	CHAR(6)		NOT NULL CHECK(client_passport_number ~ '[0-9]{6}$'),
 	client_address			TEXT		NOT NULL,
 	CONSTRAINT	
 		client_passport_uq UNIQUE (client_passport_seria,client_passport_number)
