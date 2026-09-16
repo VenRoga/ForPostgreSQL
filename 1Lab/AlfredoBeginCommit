@@ -2,11 +2,11 @@ BEGIN;
 
 INSERT INTO Item (item_type_id, item_percent_wear, item_summ, item_status, item_active_pawn_id)
 VALUES (1, 5, 15000.00, 'принято', NULL)
-RETURNING item_id; 
+RETURNING item_id; --предположим 10
 
 INSERT INTO Pawn (pawn_client_id, pawn_item_id, pawn_sign_date, pawn_summ, pawn_comis, pawn_end_date, pawn_redemption_date)
 VALUES (1, 10, '2026-03-16', 15000.00, 10, '2026-04-16', NULL)
-RETURNING pawn_id; 
+RETURNING pawn_id; --предположим 50
 
 UPDATE Item 
 SET item_active_pawn_id = 50 
