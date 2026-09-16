@@ -14,7 +14,8 @@ Create Table Item (
 	item_type_id		INT 			NOT NULL REFERENCES Item_type(item_type_id),
 	item_percent_wear	INT 			NOT NULL CHECK(item_percent_wear BETWEEN 0 AND 100),
 	item_summ			NUMERIC(12,2) 	NOT NULL CHECK(item_summ > 0),
-	item_status			TEXT 			NOT NULL CHECK(item_status IN('принято','продано','просрочено'))
+	item_status			TEXT 			NOT NULL CHECK(item_status IN('принято','продано','просрочено')),
+	item_active_pawn_id INT            	UNIQUE
 );
 
 Create Table Composition(
@@ -49,3 +50,7 @@ Create Table Pawn (
         pawn_end_date > pawn_sign_date AND 
         (pawn_redemption_date IS NULL OR pawn_redemption_date >= pawn_sign_date)
 );
+
+ALTER TABLE Item 
+	ADD CONSTRAINT item_active_pawn_fk 
+	FOREIGN KEY (item_active_pawn_id) REFERENCES Pawn(pawn_id) ON DELETE SET NULL
