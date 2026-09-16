@@ -18,8 +18,8 @@ Create Table Item (
 );
 
 Create Table Composition(
-	composition_id				INT 			NOT NULL REFERENCES Item(item_id),
-	composition_materials_id	INT 			NOT NULL REFERENCES	Materials(materials_id),
+	composition_id				INT 			NOT NULL REFERENCES Item(item_id) ON DELETE CASCADE,
+	composition_materials_id	INT 			NOT NULL REFERENCES	Materials(materials_id) ON DELETE RESTRICT,
 	composition_weight			NUMERIC(5,2) 	NOT NULL CHECK(composition_weight > 0),
 	PRIMARY KEY(composition_id, composition_materials_id)
 );
@@ -29,10 +29,11 @@ Create Table Client (
 	client_last_name		TEXT  		NOT NULL,
 	client_first_name		TEXT		NOT NULL,
 	client_middle_name		TEXT,
-	client_passport_seria	CHAR(4)		NOT NULL,
-	client_passport_number	CHAR(6)		NOT NULL,
+	client_passport_seria	CHAR(4)		NOT NULL CHECK(client_passport_seria ~ '[0-9]{4}$'),
+	client_passport_number	CHAR(6)		NOT NULL CHECK(client_passport_number ~ '^[0-9]{6}$'),
 	client_address			TEXT		NOT NULL,
-	CONSTRAINT	client_passport_uq UNIQUE (client_passport_seria,client_passport_number)
+	CONSTRAINT	
+		client_passport_uq UNIQUE (client_passport_seria,client_passport_number)
 );
 
 Create Table Pawn (
@@ -44,5 +45,7 @@ Create Table Pawn (
 	pawn_comis				INT					NOT NULL CHECK(pawn_comis BETWEEN 0 AND 100),
 	pawn_end_date			DATE				NOT NULL,
 	pawn_redemption_date	DATE,				
-	CONSTRAINT	pawn_chkdate CHECK(pawn_end_date > pawn_sign_date) 
+	CONSTRAINT pawn_chkdate CHECK (
+        pawn_end_date > pawn_sign_date AND 
+        (pawn_redemption_date IS NULL OR pawn_redemption_date >= pawn_sign_date)
 );
