@@ -2,10 +2,9 @@ WITH
 inserted_item AS (
     INSERT INTO Item (item_type_id, item_percent_wear, item_summ, item_status, item_active_pawn_id)
     VALUES (1, 10, 25000.00, 'принято', NULL)
-    RETURNING item_id -- Запоминаем сгенерированный базой item_id
+    RETURNING item_id 
 ),
 
--- Шаг 2: Динамически создаем Залог, используя item_id из Шага 1
 inserted_pawn AS (
     INSERT INTO Pawn (pawn_client_id, pawn_item_id, pawn_sign_date, pawn_summ, pawn_comis, pawn_end_date, pawn_redemption_date)
     SELECT 
@@ -17,10 +16,9 @@ inserted_pawn AS (
         '2026-04-16',    -- Дата окончания
         NULL             -- Дата выкупа (пока NULL)
     FROM inserted_item
-    RETURNING pawn_id, pawn_item_id -- Запоминаем сгенерированный pawn_id и связанный предмет
+    RETURNING pawn_id, pawn_item_id 
 )
 
--- Шаг 3: Динамически замыкаем двойную связь в таблице Item
 UPDATE Item 
 SET item_active_pawn_id = inserted_pawn.pawn_id
 FROM inserted_pawn
